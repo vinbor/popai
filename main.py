@@ -7,7 +7,7 @@ import logging
 import requests
 from dotenv import load_dotenv
 
-
+load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
@@ -52,7 +52,6 @@ def fetch(req):
     auth_header = request.headers.get("Authorization")
     auth_token = auth_header.split(' ')[1] if auth_header and ' ' in auth_header else auth_header
     
-    load_dotenv()
     # 获取模型名称对应的 channelId
     if model_name in ["dalle3", "websearch"]:
         channelId = os.getenv(model_name)
