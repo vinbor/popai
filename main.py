@@ -2,8 +2,11 @@ from flask import Flask, request, Response, jsonify
 from flask_cors import CORS, cross_origin
 import json
 import uuid
+import os
 import logging
 import requests
+from dotenv import load_dotenv
+
 
 app = Flask(__name__)
 CORS(app)
@@ -48,15 +51,11 @@ def fetch(req):
 
     auth_header = request.headers.get("Authorization")
     auth_token = auth_header.split(' ')[1] if auth_header and ' ' in auth_header else auth_header
-
+    
+    load_dotenv()
+    # 获取模型名称对应的 channelId
     if model_name in ["dalle3", "websearch"]:
-        with open('channelid.txt', 'r') as file:
-            lines = file.readlines()
-            for line in lines:
-                model, ch_id = line.strip().split(":")
-                if model == model_name:
-                    channelId = ch_id
-                    break
+        channelId = os.getenv(model_name)
 
     if channelId is None:
         url = "https://api.popai.pro/api/v1/chat/getChannel"
